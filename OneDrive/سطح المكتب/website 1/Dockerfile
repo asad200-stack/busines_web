@@ -15,12 +15,15 @@ RUN npm ci --omit=dev
 WORKDIR /app/client
 RUN npm ci
 
-# Copy ALL remaining files
+# Copy client source files (including index.html and vite.config.js)
 WORKDIR /app
-COPY . .
+COPY client/ ./client/
 
 # Verify index.html exists before building
 RUN ls -la /app/client/ && test -f /app/client/index.html || (echo "ERROR: index.html not found in /app/client/" && ls -la /app/client/ && exit 1)
+
+# Verify vite.config.js exists
+RUN test -f /app/client/vite.config.js || (echo "ERROR: vite.config.js not found!" && exit 1)
 
 # Build client from client directory
 WORKDIR /app/client
@@ -28,6 +31,10 @@ RUN npm run build
 
 # Verify build output
 RUN test -f /app/client/dist/index.html || (echo "ERROR: Build failed - dist/index.html not found!" && exit 1)
+
+# Copy server files
+WORKDIR /app
+COPY server/ ./server/
 
 # Back to root
 WORKDIR /app
