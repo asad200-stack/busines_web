@@ -41,6 +41,10 @@ WORKDIR /app/client
 RUN echo "=== Current directory: $(pwd) ===" && \
     echo "=== Files in current directory ===" && \
     ls -la && \
+    echo "=== Checking index.html ===" && \
+    cat index.html | head -3 && \
+    echo "=== Checking vite.config.js ===" && \
+    cat vite.config.js | head -5 && \
     echo "=== Running build ===" && \
     npm run build
 
