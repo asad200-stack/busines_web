@@ -15,9 +15,13 @@ RUN npm ci --omit=dev
 WORKDIR /app/client
 RUN npm ci
 
-# Copy client source files (including index.html and vite.config.js)
+# Copy client source files (excluding node_modules which is already installed)
 WORKDIR /app
-COPY client/ ./client/
+COPY client/index.html ./client/
+COPY client/vite.config.js ./client/
+COPY client/src/ ./client/src/
+COPY client/tailwind.config.js ./client/
+COPY client/postcss.config.js ./client/
 
 # Verify index.html exists before building
 RUN ls -la /app/client/ && test -f /app/client/index.html || (echo "ERROR: index.html not found in /app/client/" && ls -la /app/client/ && exit 1)
